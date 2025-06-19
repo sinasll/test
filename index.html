@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Make World Great Again</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+
+    <!-- PROFILE tab (empty for now) -->
+    <div class="page" id="profile">
+      <!-- Put your PROFILE content here -->
+    </div>
+
+    <!-- HOME tab (your existing content) -->
+    <div class="page active" id="home">
+      <h1>Let's Make World Great Again</h1>
+      
+      <div class="image-wrapper">
+        <img src="animation.gif" alt="Forest">
+      </div>
+      
+      <div class="info-row">
+        <p class="info-text">
+          every 100 stars you donate<br>
+          will plant one tree
+        </p>
+        <button class="btn more-btn">MORE</button>
+      </div>
+      
+      <button class="btn plant-btn">PLANT</button>
+    </div>
+
+    <!-- LEADERS tab (empty for now) -->
+    <div class="page" id="leaders">
+      <!-- Put your LEADERS content here -->
+    </div>
+
+    <nav class="bottom-nav">
+      <button class="nav-btn" data-target="profile">PROFILE</button>
+      <button class="nav-btn active" data-target="home">HOME</button>
+      <button class="nav-btn" data-target="leaders">LEADERS</button>
+    </nav>
+    
+  </div>
+
+<script src="tabs.js"></script>
+
+</body>
+</html>
