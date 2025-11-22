@@ -1,52 +1,555 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ku" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Make World Great Again</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>سەختەکار (Badînî)</title>
+    <style>
+        :root {
+            --bg-color: #1a1a1a;
+            --card-color: #2d2d2d;
+            --accent-color: #ffc107; /* Yellow */
+            --text-color: #ffffff;
+            --danger-color: #ff4444;
+            --success-color: #00C851;
+        }
+
+        body {
+            font-family: "Tahoma", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            justify-content: center;
+            text-align: center;
+            user-select: none;
+            direction: rtl;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 400px;
+            padding: 20px;
+        }
+
+        h1 {
+            color: var(--accent-color);
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+
+        h2 { font-size: 1.5rem; margin-bottom: 20px; }
+        p { font-size: 1.1rem; color: #ccc; }
+
+        /* Inputs & Selects */
+        .control-group {
+            margin-bottom: 20px;
+            background: var(--card-color);
+            padding: 15px;
+            border-radius: 12px;
+            text-align: right;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+
+        select, input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #444;
+            background: #333;
+            color: white;
+            font-size: 1rem;
+            box-sizing: border-box;
+            font-family: inherit;
+        }
+
+        /* Buttons */
+        .btn {
+            background-color: var(--accent-color);
+            color: #000;
+            border: none;
+            padding: 16px 32px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+            transition: transform 0.1s;
+            box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3);
+            font-family: inherit;
+        }
+
+        .btn:active { transform: scale(0.98); }
+        
+        .btn-danger { background-color: var(--danger-color); color: white; }
+        .btn-secondary { background-color: #555; color: white; }
+        
+        .btn:disabled {
+            background-color: #444;
+            color: #777;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        /* Card Reveal Animation */
+        .card-container {
+            perspective: 1000px;
+            width: 100%;
+            height: 280px;
+            margin: 20px 0;
+            cursor: pointer;
+        }
+
+        .card {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .card.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-radius: 15px;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .card-front {
+            background: linear-gradient(135deg, #333, #222);
+            border: 2px solid var(--accent-color);
+        }
+
+        .card-back {
+            background: var(--card-color);
+            transform: rotateY(180deg);
+            border: 2px solid #fff;
+        }
+
+        .secret-word {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--accent-color);
+            margin: 20px 0;
+        }
+
+        .role-title {
+            font-size: 1.4rem;
+            color: #888;
+        }
+
+        .imposter-text {
+            color: var(--danger-color);
+            font-size: 2.5rem;
+            font-weight: 800;
+        }
+
+        /* Timer */
+        .timer-display {
+            font-size: 5rem;
+            font-weight: bold;
+            font-variant-numeric: tabular-nums;
+            margin: 30px 0;
+            direction: ltr;
+        }
+
+        /* Voting Grid */
+        .voting-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .vote-btn {
+            background-color: #333;
+            border: 2px solid #555;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            cursor: pointer;
+        }
+
+        .vote-btn:hover { background-color: #444; }
+        .vote-btn:active { background-color: var(--accent-color); color: black; }
+
+        /* Utility Classes */
+        .hidden { display: none !important; }
+        .invisible { opacity: 0; pointer-events: none; }
+        .fade-in { animation: fadeIn 0.5s; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
 
-    <!-- PROFILE tab (empty for now) -->
-    <div class="page" id="profile">
-      <!-- Put your PROFILE content here -->
+    <!-- SCREEN 1: SETUP -->
+    <div id="setup-screen" class="container fade-in">
+        <h1>🕵️ سەختەکار</h1>
+        <p>خۆشترین یاریێ کوردی</p>
+        
+        <div class="control-group">
+            <label>👥 ژمارا یاریکەرا</label>
+            <select id="playerCount">
+                <option value="3">٣</option>
+                <option value="4" selected>٤</option>
+                <option value="5">٥</option>
+                <option value="6">٦</option>
+                <option value="7">٧</option>
+                <option value="8">٨</option>
+                <option value="9">٩</option>
+                <option value="10">١٠</option>
+            </select>
+        </div>
+
+        <div class="control-group">
+            <label>🎭 ژمارا فێلبازا (سەختەکار)</label>
+            <select id="imposterCount">
+                <option value="1">١</option>
+                <option value="2">٢</option>
+            </select>
+        </div>
+
+        <div class="control-group">
+            <label>📂 جورێ پرسیارا</label>
+            <select id="categorySelect">
+                <option value="random">🎲 هەمی (Random)</option>
+                <!-- Categories populated by JS -->
+            </select>
+        </div>
+
+        <button class="btn" onclick="initGame()">دەستپێبکە</button>
     </div>
 
-    <!-- HOME tab (your existing content) -->
-    <div class="page active" id="home">
-      <h1>Let's Make World Great Again</h1>
-      
-      <div class="image-wrapper">
-        <img src="animation.gif" alt="Forest">
-      </div>
-      
-      <div class="info-row">
-        <p class="info-text">
-          every 100 stars you donate<br>
-          will plant one tree
-        </p>
-        <button class="btn more-btn">MORE</button>
-      </div>
-      
-      <button class="btn plant-btn">PLANT</button>
+    <!-- SCREEN 2: PASS DEVICE -->
+    <div id="pass-screen" class="container hidden">
+        <h2>دورا یاریکەرێ</h2>
+        <div style="font-size: 5rem; font-weight: bold; color: var(--accent-color); margin: 20px 0;" id="player-number-display">١</div>
+        <p>موبایلێ بدە ڤی کەسی</p>
+        <div style="margin: 30px 0; font-size: 4rem;">📱🔄🧔</div>
+        <button class="btn" onclick="showRevealScreen()">ئەز ئامادەمە</button>
     </div>
 
-    <!-- LEADERS tab (empty for now) -->
-    <div class="page" id="leaders">
-      <!-- Put your LEADERS content here -->
+    <!-- SCREEN 3: REVEAL ROLE -->
+    <div id="reveal-screen" class="container hidden">
+        <h2>رولێ خۆ ببینە</h2>
+        <p>ل سەر کارتێ بدە دا بزڤڕیت</p>
+        
+        <div class="card-container" onclick="flipCard()">
+            <div class="card" id="game-card">
+                <div class="card-face card-front">
+                    <span style="font-size: 4rem;">❓</span>
+                    <p style="font-size: 1.5rem;">لێدە</p>
+                </div>
+                <div class="card-face card-back">
+                    <div class="role-title" id="role-label">رولێ تە</div>
+                    <div class="secret-word" id="secret-word-display">...</div>
+                    <p style="font-size: 1rem; margin-top:10px;">(بلا کەسێ دی نەبینیت!)</p>
+                </div>
+            </div>
+        </div>
+
+        <button class="btn btn-secondary invisible" id="next-player-btn" onclick="nextTurn()">ڤەشێرە & دەرباز بکە</button>
     </div>
 
-    <nav class="bottom-nav">
-      <button class="nav-btn" data-target="profile">PROFILE</button>
-      <button class="nav-btn active" data-target="home">HOME</button>
-      <button class="nav-btn" data-target="leaders">LEADERS</button>
-    </nav>
-    
-  </div>
+    <!-- SCREEN 4: TIMER / GAME LOOP -->
+    <div id="game-screen" class="container hidden">
+        <h2>🗣️ دەستپێبکەن!</h2>
+        <p>بابەت: <span id="game-category-display" style="color:var(--accent-color); font-weight:bold; font-size:1.3rem;">-</span></p>
+        
+        <div class="timer-display" id="timer">3:00</div>
+        
+        <button class="btn btn-danger" onclick="startVoting()">داوی & دەنگدان</button>
+    </div>
 
-<script src="tabs.js"></script>
+    <!-- SCREEN 5: VOTING -->
+    <div id="voting-screen" class="container hidden">
+        <h2>🗳️ دەنگدان</h2>
+        <p>فێلباز کییە؟ دەنگی بدەنە کەسەکی</p>
+        
+        <div id="voting-buttons" class="voting-grid">
+            <!-- Buttons generated by JS -->
+        </div>
+    </div>
 
+    <!-- SCREEN 6: RESULTS -->
+    <div id="result-screen" class="container hidden">
+        <h1 id="win-status" style="font-size: 3rem; margin-bottom: 20px;"></h1>
+        
+        <div class="control-group">
+            <label>پەیڤا ڤەشارتی ئەڤە بوو:</label>
+            <h2 style="color: var(--success-color); font-size: 2.5rem;" id="final-word">...</h2>
+        </div>
+
+        <div class="control-group">
+            <label>😈 فێلباز کی بوو؟</label>
+            <div id="imposter-list" style="font-size: 1.5rem; font-weight:bold; color: var(--danger-color);"></div>
+        </div>
+
+        <button class="btn" onclick="location.reload()">یاریەکا نوی</button>
+    </div>
+
+    <script>
+        // --- DATA ---
+        const database = [
+            {
+                name: "باژێر (Cities)",
+                words: ["دهوک", "زاخو", "ئاکرێ", "ئامێدی", "شێلادزێ", "سێمێل", "هەولێر", "سلێمانی", "کەرکوک", "ئیستەنبول", "بەغدا"]
+            },
+            {
+                name: "خوارن (Food)",
+                words: ["کوتلک", "بریانی", "دۆلمە", "کەباب", "سەر و پێ", "کوبە", "شۆربا نیسکا", "پیتزا", "ساوار", "گۆشتێ مریشکا", "مەقلووبە"]
+            },
+            {
+                name: "گیانەوەر (Animals)",
+                words: ["شێر", "پلنگ", "مار", "کەر", "هەسپ", "پیسیک", "سە (کۆچک)", "گورگ", "کەو", "میهـ", "فیل"]
+            },
+            {
+                name: "جهـ (Places)",
+                words: ["قوتابخانە", "نەخۆشخانە", "مزگەفت", "زانکۆ", "فڕۆکەخانە", "ئوتێل", "پارک", "فەرمانگەهـ", "بازاڕ", "ماڵا خەزووری"]
+            },
+            {
+                name: "تشتێن مالێ (Objects)",
+                words: ["تەلەفزیۆن", "سۆبە", "ساردکەر (سەلاجە)", "فراق شو", "موبایل", "تەختێ خەوێ", "قەنەفە", "مافۆر (خالیچە)", "دەرگەهـ", "پەنجەرە"]
+            },
+            {
+                name: "وەرزش (Sport)",
+                words: ["تەپا پێ (فوتبول)", "مەلەڤانی", "باسکێت بۆڵ", "تێنیس", "بالیۆز", "رەڤین", "فیتنێس", "هەسپ سواری"]
+            }
+        ];
+
+        // --- GAME STATE ---
+        let state = {
+            players: [], 
+            currentPlayerIndex: 0,
+            secretWord: "",
+            category: "",
+            timerInterval: null
+        };
+
+        const arabicNumerals = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+        function toArabicNum(n) {
+            return n.toString().replace(/\d/g, d => arabicNumerals[d]);
+        }
+
+        // --- INITIALIZATION ---
+        window.onload = function() {
+            const catSelect = document.getElementById('categorySelect');
+            database.forEach((cat, index) => {
+                const option = document.createElement('option');
+                option.value = index;
+                option.innerText = cat.name;
+                catSelect.appendChild(option);
+            });
+        };
+
+        function initGame() {
+            const pCount = parseInt(document.getElementById('playerCount').value);
+            const iCount = parseInt(document.getElementById('imposterCount').value);
+            const catVal = document.getElementById('categorySelect').value;
+
+            if (iCount >= pCount) {
+                alert("خەلەتی: ژمارا فێلبازا نابیت هندی یاریکەرا بیت!");
+                return;
+            }
+
+            // 1. Select Category & Word
+            let selectedCategory;
+            if (catVal === 'random') {
+                selectedCategory = database[Math.floor(Math.random() * database.length)];
+            } else {
+                selectedCategory = database[parseInt(catVal)];
+            }
+            
+            state.category = selectedCategory.name;
+            state.secretWord = selectedCategory.words[Math.floor(Math.random() * selectedCategory.words.length)];
+
+            // 2. Build Player Array
+            let roles = Array(pCount).fill("وەلاتی");
+            
+            // Add Imposters
+            for(let i=0; i<iCount; i++) {
+                roles[i] = "سەختەکار";
+            }
+
+            // Shuffle Roles
+            roles.sort(() => Math.random() - 0.5);
+
+            state.players = roles.map((role, index) => ({
+                id: index + 1,
+                role: role
+            }));
+            state.currentPlayerIndex = 0;
+
+            // 3. Start Game Loop
+            switchScreen('setup-screen', 'pass-screen');
+            updatePassScreen();
+        }
+
+        // --- NAVIGATION LOGIC ---
+
+        function updatePassScreen() {
+            document.getElementById('player-number-display').innerText = toArabicNum(state.players[state.currentPlayerIndex].id);
+        }
+
+        function showRevealScreen() {
+            const card = document.getElementById('game-card');
+            card.classList.remove('flipped');
+            
+            const nextBtn = document.getElementById('next-player-btn');
+            nextBtn.classList.add('invisible');
+
+            const currentPlayer = state.players[state.currentPlayerIndex];
+            const wordDisplay = document.getElementById('secret-word-display');
+            const roleLabel = document.getElementById('role-label');
+
+            if (currentPlayer.role === "سەختەکار") {
+                roleLabel.innerText = "رولێ تە:";
+                wordDisplay.innerText = "فێلباز (سەختەکار)";
+                wordDisplay.className = "secret-word imposter-text";
+            } else {
+                roleLabel.innerText = "پەیڤا تە:";
+                wordDisplay.innerText = state.secretWord;
+                wordDisplay.className = "secret-word";
+                wordDisplay.style.color = "var(--accent-color)";
+            }
+
+            switchScreen('pass-screen', 'reveal-screen');
+        }
+
+        function flipCard() {
+            const card = document.getElementById('game-card');
+            card.classList.add('flipped');
+            
+            const nextBtn = document.getElementById('next-player-btn');
+            nextBtn.classList.remove('invisible');
+            nextBtn.classList.add('fade-in');
+        }
+
+        function nextTurn() {
+            state.currentPlayerIndex++;
+
+            if (state.currentPlayerIndex >= state.players.length) {
+                startGameTimer();
+            } else {
+                switchScreen('reveal-screen', 'pass-screen');
+                updatePassScreen();
+            }
+        }
+
+        // --- TIMER ---
+        function startGameTimer() {
+            switchScreen('reveal-screen', 'game-screen');
+            document.getElementById('game-category-display').innerText = state.category.split('(')[0];
+            
+            let duration = 180; // 3 minutes
+            const timerDisplay = document.getElementById('timer');
+            
+            state.timerInterval = setInterval(() => {
+                duration--;
+                let m = Math.floor(duration / 60);
+                let s = duration % 60;
+                timerDisplay.innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
+
+                if (duration <= 0) {
+                    clearInterval(state.timerInterval);
+                    timerDisplay.style.color = "red";
+                    timerDisplay.innerText = "0:00";
+                    startVoting(); // Automatically go to voting when time ends
+                }
+            }, 1000);
+        }
+
+        // --- VOTING LOGIC ---
+        function startVoting() {
+            clearInterval(state.timerInterval);
+            switchScreen('game-screen', 'voting-screen');
+
+            const container = document.getElementById('voting-buttons');
+            container.innerHTML = ''; // Clear previous buttons
+
+            // Create a button for each player
+            state.players.forEach(player => {
+                const btn = document.createElement('button');
+                btn.className = 'vote-btn';
+                btn.innerText = `یاریکەر ${toArabicNum(player.id)}`;
+                btn.onclick = () => checkVote(player.id);
+                container.appendChild(btn);
+            });
+        }
+
+        function checkVote(selectedPlayerId) {
+            const selectedPlayer = state.players.find(p => p.id === selectedPlayerId);
+            const winStatus = document.getElementById('win-status');
+
+            if (selectedPlayer.role === "سەختەکار") {
+                // CITIZENS WIN
+                winStatus.innerText = "🎉 هەوە برد! (هەوە فێلباز گرت)";
+                winStatus.style.color = "var(--success-color)";
+            } else {
+                // IMPOSTER WINS
+                winStatus.innerText = "❌ هەوە دۆڕاند (فێلباز سەرکەفت)";
+                winStatus.style.color = "var(--danger-color)";
+            }
+
+            showResults();
+        }
+
+        function showResults() {
+            switchScreen('voting-screen', 'result-screen');
+            
+            // Only NOW show the secret word
+            document.getElementById('final-word').innerText = state.secretWord;
+            
+            const imposterIds = state.players
+                .filter(p => p.role === "سەختەکار")
+                .map(p => `یاریکەر ${toArabicNum(p.id)}`)
+                .join("، ");
+            
+            document.getElementById('imposter-list').innerText = imposterIds;
+        }
+
+        // --- UTILS ---
+        function switchScreen(fromId, toId) {
+            document.getElementById(fromId).classList.add('hidden');
+            const toEl = document.getElementById(toId);
+            toEl.classList.remove('hidden');
+            toEl.classList.add('fade-in');
+            setTimeout(() => toEl.classList.remove('fade-in'), 500);
+        }
+
+    </script>
 </body>
 </html>
+
+
