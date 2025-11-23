@@ -3,15 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>سەختەکار (Badînî)</title>
+    <title>سەختەکار (Pro)</title>
     <style>
         :root {
-            --bg-color: #1a1a1a;
-            --card-color: #2d2d2d;
-            --accent-color: #ffc107; /* Yellow */
+            --bg-color: #121212;
+            --card-color: #1e1e1e;
+            --accent-color: #ffca28; /* Gold */
             --text-color: #ffffff;
-            --danger-color: #ff4444;
-            --success-color: #00C851;
+            --danger-color: #ef5350;
+            --success-color: #66bb6a;
+            --disabled-color: #424242;
         }
 
         body {
@@ -39,20 +40,22 @@
         h1 {
             color: var(--accent-color);
             margin-bottom: 10px;
-            font-size: 2.5rem;
+            font-size: 2.2rem;
             font-weight: bold;
+            text-shadow: 0 2px 10px rgba(255, 202, 40, 0.2);
         }
 
-        h2 { font-size: 1.5rem; margin-bottom: 20px; }
-        p { font-size: 1.1rem; color: #ccc; }
+        h2 { font-size: 1.4rem; margin-bottom: 15px; }
+        p { font-size: 1rem; color: #aaa; margin-bottom: 5px; }
 
         /* Inputs & Selects */
         .control-group {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             background: var(--card-color);
             padding: 15px;
             border-radius: 12px;
             text-align: right;
+            border: 1px solid #333;
         }
 
         label {
@@ -60,23 +63,27 @@
             margin-bottom: 8px;
             font-weight: bold;
             color: var(--accent-color);
+            font-size: 0.9rem;
         }
 
-        select, input {
+        select {
             width: 100%;
             padding: 12px;
             border-radius: 8px;
             border: 1px solid #444;
-            background: #333;
+            background: #2c2c2c;
             color: white;
             font-size: 1rem;
             box-sizing: border-box;
             font-family: inherit;
+            outline: none;
         }
+        
+        select:focus { border-color: var(--accent-color); }
 
         /* Buttons */
         .btn {
-            background-color: var(--accent-color);
+            background: linear-gradient(135deg, var(--accent-color), #ffb300);
             color: #000;
             border: none;
             padding: 16px 32px;
@@ -85,29 +92,24 @@
             border-radius: 50px;
             cursor: pointer;
             width: 100%;
-            margin-top: 10px;
-            transition: transform 0.1s;
+            margin-top: 15px;
+            transition: transform 0.1s, box-shadow 0.2s;
             box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3);
             font-family: inherit;
         }
 
-        .btn:active { transform: scale(0.98); }
+        .btn:active { transform: scale(0.96); }
         
-        .btn-danger { background-color: var(--danger-color); color: white; }
-        .btn-secondary { background-color: #555; color: white; }
+        .btn-danger { background: linear-gradient(135deg, var(--danger-color), #d32f2f); color: white; box-shadow: 0 4px 15px rgba(239, 83, 80, 0.3); }
+        .btn-secondary { background: #424242; color: white; box-shadow: none; }
         
-        .btn:disabled {
-            background-color: #444;
-            color: #777;
-            cursor: not-allowed;
-            box-shadow: none;
-        }
+        .invisible { opacity: 0; pointer-events: none; }
 
-        /* Card Reveal Animation */
+        /* Card Animation */
         .card-container {
             perspective: 1000px;
             width: 100%;
-            height: 280px;
+            height: 260px;
             margin: 20px 0;
             cursor: pointer;
         }
@@ -116,29 +118,26 @@
             width: 100%;
             height: 100%;
             position: relative;
-            transition: transform 0.6s;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
             transform-style: preserve-3d;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
-        .card.flipped {
-            transform: rotateY(180deg);
-        }
+        .card.flipped { transform: rotateY(180deg); }
 
         .card-face {
             position: absolute;
             width: 100%;
             height: 100%;
-            -webkit-backface-visibility: hidden;
-            backface-visibility: hidden;
+            backface-visibility: hidden; /* Standard */
+            -webkit-backface-visibility: hidden; /* Safari */
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            border-radius: 15px;
+            border-radius: 20px;
             padding: 20px;
             box-sizing: border-box;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.5);
         }
 
         .card-front {
@@ -149,65 +148,81 @@
         .card-back {
             background: var(--card-color);
             transform: rotateY(180deg);
-            border: 2px solid #fff;
+            border: 2px solid #555;
         }
 
         .secret-word {
-            font-size: 2rem;
+            font-size: 1.8rem;
             font-weight: bold;
             color: var(--accent-color);
-            margin: 20px 0;
-        }
-
-        .role-title {
-            font-size: 1.4rem;
-            color: #888;
+            margin: 15px 0;
+            word-wrap: break-word;
         }
 
         .imposter-text {
             color: var(--danger-color);
-            font-size: 2.5rem;
-            font-weight: 800;
+            font-size: 2.2rem;
+            font-weight: 900;
         }
 
         /* Timer */
         .timer-display {
             font-size: 5rem;
-            font-weight: bold;
-            font-variant-numeric: tabular-nums;
+            font-weight: 800;
             margin: 30px 0;
             direction: ltr;
+            font-variant-numeric: tabular-nums;
+            text-shadow: 0 0 20px rgba(255,255,255,0.1);
         }
 
-        /* Voting Grid */
+        /* Voting System */
         .voting-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 10px;
+            gap: 12px;
             margin-top: 20px;
         }
 
         .vote-btn {
             background-color: #333;
-            border: 2px solid #555;
+            border: 2px solid #444;
             color: white;
-            padding: 20px;
-            border-radius: 10px;
-            font-size: 1.1rem;
+            padding: 15px;
+            border-radius: 12px;
+            font-size: 1rem;
             cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
         }
 
-        .vote-btn:hover { background-color: #444; }
-        .vote-btn:active { background-color: var(--accent-color); color: black; }
+        .vote-btn:active { transform: scale(0.95); }
 
-        /* Utility Classes */
+        .vote-btn.found {
+            background-color: rgba(102, 187, 106, 0.2);
+            border-color: var(--success-color);
+            color: var(--success-color);
+            pointer-events: none; /* Disable click */
+        }
+
+        .vote-btn.disabled {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        /* Utility */
         .hidden { display: none !important; }
-        .invisible { opacity: 0; pointer-events: none; }
-        .fade-in { animation: fadeIn 0.5s; }
-
+        .fade-in { animation: fadeIn 0.4s ease-out; }
+        
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
+        }
+
+        .status-msg {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 8px;
+            font-weight: bold;
         }
     </style>
 </head>
@@ -215,8 +230,7 @@
 
     <!-- SCREEN 1: SETUP -->
     <div id="setup-screen" class="container fade-in">
-        <h1>🕵️ سەختەکار</h1>
-        <p>خۆشترین یاریێ کوردی</p>
+        <h1>🕵️ سەختەکار <span style="font-size:1rem; vertical-align: super; color: #fff; background: red; padding: 2px 6px; border-radius: 4px;">PRO</span></h1>
         
         <div class="control-group">
             <label>👥 ژمارا یاریکەرا</label>
@@ -229,6 +243,8 @@
                 <option value="8">٨</option>
                 <option value="9">٩</option>
                 <option value="10">١٠</option>
+                <option value="11">١١</option>
+                <option value="12">١٢</option>
             </select>
         </div>
 
@@ -241,10 +257,21 @@
         </div>
 
         <div class="control-group">
-            <label>📂 جورێ پرسیارا</label>
+            <label>⏳ ماوەیێ یاریێ (خولەک)</label>
+            <select id="gameDuration">
+                <option value="3" selected>٣ خولەک</option>
+                <option value="4">٤ خولەک</option>
+                <option value="5">٥ خولەک</option>
+                <option value="7">٧ خولەک</option>
+                <option value="10">١٠ خولەک</option>
+            </select>
+        </div>
+
+        <div class="control-group">
+            <label>📂 بابەتا هەلبژێرە</label>
             <select id="categorySelect">
                 <option value="random">🎲 هەمی (Random)</option>
-                <!-- Categories populated by JS -->
+                <!-- JS will fill this -->
             </select>
         </div>
 
@@ -274,7 +301,7 @@
                 <div class="card-face card-back">
                     <div class="role-title" id="role-label">رولێ تە</div>
                     <div class="secret-word" id="secret-word-display">...</div>
-                    <p style="font-size: 1rem; margin-top:10px;">(بلا کەسێ دی نەبینیت!)</p>
+                    <p style="font-size: 1rem; margin-top:10px; opacity: 0.7;">(بلا کەسێ دی نەبینیت!)</p>
                 </div>
             </div>
         </div>
@@ -282,12 +309,12 @@
         <button class="btn btn-secondary invisible" id="next-player-btn" onclick="nextTurn()">ڤەشێرە & دەرباز بکە</button>
     </div>
 
-    <!-- SCREEN 4: TIMER / GAME LOOP -->
+    <!-- SCREEN 4: TIMER LOOP -->
     <div id="game-screen" class="container hidden">
         <h2>🗣️ دەستپێبکەن!</h2>
-        <p>بابەت: <span id="game-category-display" style="color:var(--accent-color); font-weight:bold; font-size:1.3rem;">-</span></p>
+        <p>بابەت: <span id="game-category-display" style="color:var(--accent-color); font-weight:bold; font-size:1.2rem;">-</span></p>
         
-        <div class="timer-display" id="timer">3:00</div>
+        <div class="timer-display" id="timer">0:00</div>
         
         <button class="btn btn-danger" onclick="startVoting()">داوی & دەنگدان</button>
     </div>
@@ -295,24 +322,26 @@
     <!-- SCREEN 5: VOTING -->
     <div id="voting-screen" class="container hidden">
         <h2>🗳️ دەنگدان</h2>
-        <p>فێلباز کییە؟ دەنگی بدەنە کەسەکی</p>
+        <p id="voting-instruction">فێلباز کییە؟ دەنگی بدەنە کەسەکی</p>
         
+        <div id="status-message-area"></div>
+
         <div id="voting-buttons" class="voting-grid">
-            <!-- Buttons generated by JS -->
+            <!-- Generated by JS -->
         </div>
     </div>
 
     <!-- SCREEN 6: RESULTS -->
     <div id="result-screen" class="container hidden">
-        <h1 id="win-status" style="font-size: 3rem; margin-bottom: 20px;"></h1>
+        <h1 id="win-status" style="font-size: 2.5rem; margin-bottom: 20px;"></h1>
         
         <div class="control-group">
-            <label>پەیڤا ڤەشارتی ئەڤە بوو:</label>
-            <h2 style="color: var(--success-color); font-size: 2.5rem;" id="final-word">...</h2>
+            <label>پەیڤا ڤەشارتی:</label>
+            <h2 style="color: var(--success-color); font-size: 2rem;" id="final-word">...</h2>
         </div>
 
         <div class="control-group">
-            <label>😈 فێلباز کی بوو؟</label>
+            <label>😈 فێلباز:</label>
             <div id="imposter-list" style="font-size: 1.5rem; font-weight:bold; color: var(--danger-color);"></div>
         </div>
 
@@ -320,41 +349,55 @@
     </div>
 
     <script>
-        // --- DATA ---
+        // --- HUGE DATABASE ---
         const database = [
             {
                 name: "باژێر (Cities)",
-                words: ["دهوک", "زاخو", "ئاکرێ", "ئامێدی", "شێلادزێ", "سێمێل", "هەولێر", "سلێمانی", "کەرکوک", "ئیستەنبول", "بەغدا"]
+                words: ["دهوک", "زاخو", "هەولێر", "سلێمانی", "کەرکوک", "ئاکرێ", "ئامێدی", "ئیستەنبول", "بەغدا", "پاریس", "لەندەن", "دوبەی", "بەرلین", "موسل", "شێلادزێ"]
             },
             {
                 name: "خوارن (Food)",
-                words: ["کوتلک", "بریانی", "دۆلمە", "کەباب", "سەر و پێ", "کوبە", "شۆربا نیسکا", "پیتزا", "ساوار", "گۆشتێ مریشکا", "مەقلووبە"]
+                words: ["کوتلک", "بریانی", "دۆلمە", "کەباب", "سەر و پێ", "کوبە", "شۆربا نیسکا", "پیتزا", "ساوار", "گۆشتێ مریشکا", "مەقلووبە", "هەمبەرگەر", "یاپراخ", "مەسکوف"]
+            },
+            {
+                name: "سترانبێژ (Singers)",
+                words: ["زەکەریا", "عبدالقەهار زاخوی", "بلند ئیبراهیم", "شڤان پەروەر", "خێرۆ عەباس", "دەشتی کالێ", "چۆپی فەتاح", "عەبدولواحید زاخوی", "جەستن بیبەر", "شاکیرا", "ئەدێل", "ئەحمەد خەلیل"]
+            },
+            {
+                name: "یانێن تەپا پێ (Football Teams)",
+                words: ["بەرشەلۆنە", "ریال مەدرید", "مانچێستەر یونایتد", "لیڤەرپول", "بایرن میونخ", "پاریس سانجێرمان", "یۆڤێنتۆس", "میلان", "دهوک", "ئەرسیناڵ", "مانچێستەر سیتی", "شورتە"]
+            },
+            {
+                name: "یاریکەرێن جیهانی (Players)",
+                words: ["مێسی", "رۆناڵدۆ", "نەیمار", "ئەمباپێ", "هالاند", "بێلینگهام", "ڤینیسیۆس", "سەڵاح", "لیڤاندۆڤیسکی", "مۆدریچ", "زێدان", "مارادۆنا"]
+            },
+            {
+                name: "جۆرێن ترۆمبێلا (Cars)",
+                words: ["تویۆتا", "مێرسیدس", "بی ئێم دەبلیو (BMW)", "هۆندای", "کیا", "لاند کروزەر", "رەنج رۆڤەر", "فێراری", "نیسان", "جیپ", "فۆرد", "ئۆپڵ"]
             },
             {
                 name: "گیانەوەر (Animals)",
-                words: ["شێر", "پلنگ", "مار", "کەر", "هەسپ", "پیسیک", "سە (کۆچک)", "گورگ", "کەو", "میهـ", "فیل"]
+                words: ["شێر", "پلنگ", "مار", "کەر", "هەسپ", "پیسیک", "سە (کۆچک)", "گورگ", "کەو", "میهـ", "فیل", "مریشک", "كێڤژالە", "ماسی"]
             },
             {
                 name: "جهـ (Places)",
-                words: ["قوتابخانە", "نەخۆشخانە", "مزگەفت", "زانکۆ", "فڕۆکەخانە", "ئوتێل", "پارک", "فەرمانگەهـ", "بازاڕ", "ماڵا خەزووری"]
+                words: ["قوتابخانە", "نەخۆشخانە", "مزگەفت", "زانکۆ", "فڕۆکەخانە", "ئوتێل", "پارک", "فەرمانگەهـ", "بازاڕ", "ماڵا خەزووری", "سینەما", "کافێ", "باشترین کافێ"]
             },
             {
                 name: "تشتێن مالێ (Objects)",
-                words: ["تەلەفزیۆن", "سۆبە", "ساردکەر (سەلاجە)", "فراق شو", "موبایل", "تەختێ خەوێ", "قەنەفە", "مافۆر (خالیچە)", "دەرگەهـ", "پەنجەرە"]
-            },
-            {
-                name: "وەرزش (Sport)",
-                words: ["تەپا پێ (فوتبول)", "مەلەڤانی", "باسکێت بۆڵ", "تێنیس", "بالیۆز", "رەڤین", "فیتنێس", "هەسپ سواری"]
+                words: ["تەلەفزیۆن", "سۆبە", "ساردکەر (سەلاجە)", "فراق شو", "موبایل", "تەختێ خەوێ", "قەنەفە", "مافۆر (خالیچە)", "دەرگەهـ", "پەنجەرە", "ئاوێنە", "جل شۆ"]
             }
         ];
 
-        // --- GAME STATE ---
+        // --- STATE ---
         let state = {
             players: [], 
             currentPlayerIndex: 0,
             secretWord: "",
             category: "",
-            timerInterval: null
+            timerInterval: null,
+            totalImposters: 0,
+            foundImpostersCount: 0
         };
 
         const arabicNumerals = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
@@ -376,14 +419,15 @@
         function initGame() {
             const pCount = parseInt(document.getElementById('playerCount').value);
             const iCount = parseInt(document.getElementById('imposterCount').value);
+            const duration = parseInt(document.getElementById('gameDuration').value);
             const catVal = document.getElementById('categorySelect').value;
 
-            if (iCount >= pCount) {
-                alert("خەلەتی: ژمارا فێلبازا نابیت هندی یاریکەرا بیت!");
+            if (iCount >= pCount - 1) { // Must have at least 2 citizens
+                alert("خەلەتی: ژمارا فێلبازا گەلەکە!");
                 return;
             }
 
-            // 1. Select Category & Word
+            // Setup Category
             let selectedCategory;
             if (catVal === 'random') {
                 selectedCategory = database[Math.floor(Math.random() * database.length)];
@@ -393,31 +437,27 @@
             
             state.category = selectedCategory.name;
             state.secretWord = selectedCategory.words[Math.floor(Math.random() * selectedCategory.words.length)];
+            state.totalImposters = iCount;
+            state.foundImpostersCount = 0;
+            state.gameDuration = duration;
 
-            // 2. Build Player Array
+            // Build Roles
             let roles = Array(pCount).fill("وەلاتی");
-            
-            // Add Imposters
-            for(let i=0; i<iCount; i++) {
-                roles[i] = "سەختەکار";
-            }
-
-            // Shuffle Roles
+            for(let i=0; i<iCount; i++) roles[i] = "سەختەکار";
             roles.sort(() => Math.random() - 0.5);
 
             state.players = roles.map((role, index) => ({
                 id: index + 1,
-                role: role
+                role: role,
+                isFound: false
             }));
             state.currentPlayerIndex = 0;
 
-            // 3. Start Game Loop
             switchScreen('setup-screen', 'pass-screen');
             updatePassScreen();
         }
 
-        // --- NAVIGATION LOGIC ---
-
+        // --- NAVIGATION ---
         function updatePassScreen() {
             document.getElementById('player-number-display').innerText = toArabicNum(state.players[state.currentPlayerIndex].id);
         }
@@ -425,9 +465,7 @@
         function showRevealScreen() {
             const card = document.getElementById('game-card');
             card.classList.remove('flipped');
-            
-            const nextBtn = document.getElementById('next-player-btn');
-            nextBtn.classList.add('invisible');
+            document.getElementById('next-player-btn').classList.add('invisible');
 
             const currentPlayer = state.players[state.currentPlayerIndex];
             const wordDisplay = document.getElementById('secret-word-display');
@@ -443,14 +481,11 @@
                 wordDisplay.className = "secret-word";
                 wordDisplay.style.color = "var(--accent-color)";
             }
-
             switchScreen('pass-screen', 'reveal-screen');
         }
 
         function flipCard() {
-            const card = document.getElementById('game-card');
-            card.classList.add('flipped');
-            
+            document.getElementById('game-card').classList.add('flipped');
             const nextBtn = document.getElementById('next-player-btn');
             nextBtn.classList.remove('invisible');
             nextBtn.classList.add('fade-in');
@@ -458,7 +493,6 @@
 
         function nextTurn() {
             state.currentPlayerIndex++;
-
             if (state.currentPlayerIndex >= state.players.length) {
                 startGameTimer();
             } else {
@@ -472,9 +506,14 @@
             switchScreen('reveal-screen', 'game-screen');
             document.getElementById('game-category-display').innerText = state.category.split('(')[0];
             
-            let duration = 180; // 3 minutes
+            let duration = state.gameDuration * 60;
             const timerDisplay = document.getElementById('timer');
             
+            // Immediate render
+            let m = Math.floor(duration / 60);
+            let s = duration % 60;
+            timerDisplay.innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
+
             state.timerInterval = setInterval(() => {
                 duration--;
                 let m = Math.floor(duration / 60);
@@ -485,50 +524,80 @@
                     clearInterval(state.timerInterval);
                     timerDisplay.style.color = "red";
                     timerDisplay.innerText = "0:00";
-                    startVoting(); // Automatically go to voting when time ends
+                    startVoting();
                 }
             }, 1000);
         }
 
-        // --- VOTING LOGIC ---
+        // --- VOTING LOGIC (NEW & IMPROVED) ---
         function startVoting() {
             clearInterval(state.timerInterval);
             switchScreen('game-screen', 'voting-screen');
+            renderVotingButtons();
+        }
 
+        function renderVotingButtons() {
             const container = document.getElementById('voting-buttons');
-            container.innerHTML = ''; // Clear previous buttons
+            container.innerHTML = '';
 
-            // Create a button for each player
             state.players.forEach(player => {
                 const btn = document.createElement('button');
                 btn.className = 'vote-btn';
                 btn.innerText = `یاریکەر ${toArabicNum(player.id)}`;
-                btn.onclick = () => checkVote(player.id);
+                
+                if (player.isFound) {
+                    btn.classList.add('found');
+                    btn.innerText += " (گیرای)";
+                } else {
+                    btn.onclick = () => checkVote(player.id, btn);
+                }
+                
                 container.appendChild(btn);
             });
         }
 
-        function checkVote(selectedPlayerId) {
+        function checkVote(selectedPlayerId, btnElement) {
             const selectedPlayer = state.players.find(p => p.id === selectedPlayerId);
+            const msgArea = document.getElementById('status-message-area');
+
+            // 1. If user selects a CITIZEN (Wrong Guess) -> GAME OVER immediately
+            if (selectedPlayer.role === "وەلاتی") {
+                endGame(false); // Citizens Lose
+                return;
+            }
+
+            // 2. If user selects an IMPOSTER (Correct Guess)
+            if (selectedPlayer.role === "سەختەکار") {
+                selectedPlayer.isFound = true; // Mark as found
+                state.foundImpostersCount++;
+
+                // Update UI
+                btnElement.classList.add('found');
+                btnElement.innerText += " (گیرای)";
+                
+                // Check if ALL imposters are found
+                if (state.foundImpostersCount === state.totalImposters) {
+                    endGame(true); // Citizens Win
+                } else {
+                    // Game continues, must find the other one
+                    msgArea.innerHTML = `<div class="status-msg" style="background:rgba(102, 187, 106, 0.2); color:#66bb6a;">✅ ئافەرم! تە ئێک گرت. یێ دی ژی ببینە!</div>`;
+                    renderVotingButtons(); // Re-render to disable the button
+                }
+            }
+        }
+
+        function endGame(citizensWon) {
+            switchScreen('voting-screen', 'result-screen');
             const winStatus = document.getElementById('win-status');
 
-            if (selectedPlayer.role === "سەختەکار") {
-                // CITIZENS WIN
-                winStatus.innerText = "🎉 هەوە برد! (هەوە فێلباز گرت)";
+            if (citizensWon) {
+                winStatus.innerText = "🎉 هەوە برد! (هەمی فێلباز گیران)";
                 winStatus.style.color = "var(--success-color)";
             } else {
-                // IMPOSTER WINS
                 winStatus.innerText = "❌ هەوە دۆڕاند (فێلباز سەرکەفت)";
                 winStatus.style.color = "var(--danger-color)";
             }
 
-            showResults();
-        }
-
-        function showResults() {
-            switchScreen('voting-screen', 'result-screen');
-            
-            // Only NOW show the secret word
             document.getElementById('final-word').innerText = state.secretWord;
             
             const imposterIds = state.players
@@ -539,7 +608,6 @@
             document.getElementById('imposter-list').innerText = imposterIds;
         }
 
-        // --- UTILS ---
         function switchScreen(fromId, toId) {
             document.getElementById(fromId).classList.add('hidden');
             const toEl = document.getElementById(toId);
@@ -547,7 +615,6 @@
             toEl.classList.add('fade-in');
             setTimeout(() => toEl.classList.remove('fade-in'), 500);
         }
-
     </script>
 </body>
 </html>
