@@ -81,6 +81,61 @@
         
         select:focus { border-color: var(--accent-color); }
 
+        /* Checkbox List Styling */
+        .checkbox-list {
+            max-height: 150px;
+            overflow-y: auto;
+            border: 1px solid #444;
+            border-radius: 8px;
+            padding: 5px 10px;
+            background: #2c2c2c;
+        }
+
+        .checkbox-list div {
+            padding: 8px 0;
+            border-bottom: 1px solid #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .checkbox-list div:last-child { border-bottom: none; }
+
+        .checkbox-list label {
+            color: var(--text-color);
+            font-weight: normal;
+            margin: 0;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .checkbox-list input[type="checkbox"] {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #555;
+            border-radius: 4px;
+            margin-right: 10px;
+            cursor: pointer;
+            position: relative;
+            background: #1e1e1e;
+        }
+
+        .checkbox-list input[type="checkbox"]:checked {
+            background-color: var(--success-color);
+            border-color: var(--success-color);
+        }
+
+        .checkbox-list input[type="checkbox"]:checked::after {
+            content: '✓';
+            color: white;
+            font-size: 14px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
         /* Buttons */
         .btn {
             background: linear-gradient(135deg, var(--accent-color), #ffb300);
@@ -128,8 +183,8 @@
             position: absolute;
             width: 100%;
             height: 100%;
-            backface-visibility: hidden; /* Standard */
-            -webkit-backface-visibility: hidden; /* Safari */
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -201,7 +256,7 @@
             background-color: rgba(102, 187, 106, 0.2);
             border-color: var(--success-color);
             color: var(--success-color);
-            pointer-events: none; /* Disable click */
+            pointer-events: none;
         }
 
         .vote-btn.disabled {
@@ -273,6 +328,14 @@
                 <option value="random">🎲 هەمی (Random)</option>
                 <!-- JS will fill this -->
             </select>
+        </div>
+
+        <div class="control-group">
+            <label>چ بابەت د ناڤ Random دا نەهێن؟</label>
+            <p style="font-size: 0.85rem; color: #888; margin-bottom: 10px;">(تەنێ بابەتێن لێدراوی دێ د بژاردەیا "هەمی" دا دەربکەڤن)</p>
+            <div id="categoryFilterList" class="checkbox-list">
+                <!-- Checkboxes will be dynamically added here -->
+            </div>
         </div>
 
         <button class="btn" onclick="initGame()">دەستپێبکە</button>
@@ -408,32 +471,70 @@
         // --- INITIALIZATION ---
         window.onload = function() {
             const catSelect = document.getElementById('categorySelect');
+            const filterList = document.getElementById('categoryFilterList');
+
             database.forEach((cat, index) => {
+                // 1. Fill the Select dropdown
                 const option = document.createElement('option');
                 option.value = index;
                 option.innerText = cat.name;
                 catSelect.appendChild(option);
+
+                // 2. Fill the Filter Checkbox list
+                const div = document.createElement('div');
+                div.innerHTML = `
+                    <label for="cat-filter-${index}">${cat.name}</label>
+                    <input type="checkbox" id="cat-filter-${index}" value="${index}" checked>
+                `;
+                filterList.appendChild(div);
             });
         };
+
+        function getFilteredCategories() {
+            const catVal = document.getElementById('categorySelect').value;
+            
+            if (catVal !== 'random') {
+                // If a specific category is selected, use only that one.
+                return [database[parseInt(catVal)]];
+            }
+
+            // If Random is selected, filter based on checkboxes
+            const checkedBoxes = Array.from(document.querySelectorAll('#categoryFilterList input[type="checkbox"]:checked'));
+            
+            if (checkedBoxes.length === 0) {
+                // If nothing is checked, and random is selected, this is an error case.
+                return []; 
+            }
+
+            const filteredCategories = checkedBoxes.map(checkbox => {
+                return database[parseInt(checkbox.value)];
+            });
+
+            return filteredCategories;
+        }
+
 
         function initGame() {
             const pCount = parseInt(document.getElementById('playerCount').value);
             const iCount = parseInt(document.getElementById('imposterCount').value);
             const duration = parseInt(document.getElementById('gameDuration').value);
-            const catVal = document.getElementById('categorySelect').value;
 
-            if (iCount >= pCount - 1) { // Must have at least 2 citizens
+            if (iCount >= pCount - 1) {
+                console.error("Number of imposters is too high.");
                 alert("خەلەتی: ژمارا فێلبازا گەلەکە!");
                 return;
             }
 
-            // Setup Category
-            let selectedCategory;
-            if (catVal === 'random') {
-                selectedCategory = database[Math.floor(Math.random() * database.length)];
-            } else {
-                selectedCategory = database[parseInt(catVal)];
+            // 1. Get Filtered Categories
+            const selectableCategories = getFilteredCategories();
+
+            if (selectableCategories.length === 0) {
+                alert("پێدڤیە لێدانەکێ (Check) ل سەر لایەنی کێم ئێک بابەتی بکەی، یان بابەتەکێ دی هەلبژێری.");
+                return;
             }
+
+            // 2. Select Category & Word
+            const selectedCategory = selectableCategories[Math.floor(Math.random() * selectableCategories.length)];
             
             state.category = selectedCategory.name;
             state.secretWord = selectedCategory.words[Math.floor(Math.random() * selectedCategory.words.length)];
@@ -441,7 +542,7 @@
             state.foundImpostersCount = 0;
             state.gameDuration = duration;
 
-            // Build Roles
+            // 3. Build Roles
             let roles = Array(pCount).fill("وەلاتی");
             for(let i=0; i<iCount; i++) roles[i] = "سەختەکار";
             roles.sort(() => Math.random() - 0.5);
@@ -533,6 +634,7 @@
         function startVoting() {
             clearInterval(state.timerInterval);
             switchScreen('game-screen', 'voting-screen');
+            document.getElementById('status-message-area').innerHTML = ''; // Clear previous messages
             renderVotingButtons();
         }
 
@@ -581,7 +683,7 @@
                 } else {
                     // Game continues, must find the other one
                     msgArea.innerHTML = `<div class="status-msg" style="background:rgba(102, 187, 106, 0.2); color:#66bb6a;">✅ ئافەرم! تە ئێک گرت. یێ دی ژی ببینە!</div>`;
-                    renderVotingButtons(); // Re-render to disable the button
+                    renderVotingButtons(); // Re-render to ensure correct state and disable the button
                 }
             }
         }
@@ -600,6 +702,7 @@
 
             document.getElementById('final-word').innerText = state.secretWord;
             
+            // Display all Imposters, whether found or not
             const imposterIds = state.players
                 .filter(p => p.role === "سەختەکار")
                 .map(p => `یاریکەر ${toArabicNum(p.id)}`)
@@ -618,5 +721,4 @@
     </script>
 </body>
 </html>
-
 
