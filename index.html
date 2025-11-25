@@ -3,181 +3,127 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>سەختەکار (Pro)</title>
+    <title>FakeIt Badini</title>
     <style>
+        /* --- DESIGN SYSTEM (Smooth Dark Theme) --- */
         :root {
             --bg-color: #121212;
-            --card-color: #1e1e1e;
-            --accent-color: #ffca28; /* Gold */
-            --text-color: #ffffff;
-            --danger-color: #ef5350;
-            --success-color: #66bb6a;
-            --disabled-color: #424242;
+            --surface-color: #1e1e1e;
+            --accent-color: #fbbf24; /* Amber Gold */
+            --accent-glow: rgba(251, 191, 36, 0.3);
+            --danger-color: #ef4444; /* Red */
+            --success-color: #10b981; /* Green */
+            --text-primary: #ffffff;
+            --text-secondary: #9ca3af;
+            --radius: 16px;
         }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
             font-family: "Tahoma", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             background-color: var(--bg-color);
-            color: var(--text-color);
+            color: var(--text-primary);
             margin: 0;
             padding: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
-            min-height: 100vh;
             justify-content: center;
-            text-align: center;
+            min-height: 100vh;
             user-select: none;
-            direction: rtl;
+            overflow: hidden;
         }
 
-        .container {
-            width: 90%;
-            max-width: 400px;
+        .app-container {
+            width: 100%;
+            max-width: 450px;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
             padding: 20px;
+            overflow-y: auto;
+            position: relative;
         }
 
+        /* --- TYPOGRAPHY --- */
         h1 {
             color: var(--accent-color);
-            margin-bottom: 10px;
             font-size: 2.2rem;
-            font-weight: bold;
-            text-shadow: 0 2px 10px rgba(255, 202, 40, 0.2);
+            text-align: center;
+            margin: 10px 0 5px 0;
+            font-weight: 900;
+            text-shadow: 0 0 15px var(--accent-glow);
         }
 
-        h2 { font-size: 1.4rem; margin-bottom: 15px; }
-        p { font-size: 1rem; color: #aaa; margin-bottom: 5px; }
+        h2 { font-size: 1.5rem; text-align: center; margin-bottom: 20px; font-weight: bold; }
+        p { color: var(--text-secondary); text-align: center; margin-bottom: 10px; font-size: 0.95rem; }
 
-        /* Inputs & Selects */
-        .control-group {
+        /* --- CARDS & PANELS --- */
+        .glass-card {
+            background: var(--surface-color);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: var(--radius);
+            padding: 20px;
             margin-bottom: 15px;
-            background: var(--card-color);
-            padding: 15px;
-            border-radius: 12px;
-            text-align: right;
-            border: 1px solid #333;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
         }
 
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-            color: var(--accent-color);
-            font-size: 0.9rem;
-        }
+        .control-group { margin-bottom: 15px; text-align: right; }
+        label { display: block; color: var(--accent-color); font-weight: bold; margin-bottom: 8px; font-size: 0.9rem; }
 
         select {
             width: 100%;
-            padding: 12px;
-            border-radius: 8px;
-            border: 1px solid #444;
-            background: #2c2c2c;
+            padding: 14px;
+            background: #27272a;
             color: white;
+            border: 2px solid #3f3f46;
+            border-radius: 12px;
             font-size: 1rem;
-            box-sizing: border-box;
-            font-family: inherit;
             outline: none;
+            font-family: inherit;
+            transition: 0.2s;
         }
-        
         select:focus { border-color: var(--accent-color); }
 
-        /* Checkbox List Styling */
-        .checkbox-list {
-            max-height: 150px;
-            overflow-y: auto;
-            border: 1px solid #444;
-            border-radius: 8px;
-            padding: 5px 10px;
-            background: #2c2c2c;
-        }
-
-        .checkbox-list div {
-            padding: 8px 0;
-            border-bottom: 1px solid #333;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .checkbox-list div:last-child { border-bottom: none; }
-
-        .checkbox-list label {
-            color: var(--text-color);
-            font-weight: normal;
-            margin: 0;
-            cursor: pointer;
-            width: 100%;
-        }
-
-        .checkbox-list input[type="checkbox"] {
-            appearance: none;
-            -webkit-appearance: none;
-            width: 20px;
-            height: 20px;
-            border: 2px solid #555;
-            border-radius: 4px;
-            margin-right: 10px;
-            cursor: pointer;
-            position: relative;
-            background: #1e1e1e;
-        }
-
-        .checkbox-list input[type="checkbox"]:checked {
-            background-color: var(--success-color);
-            border-color: var(--success-color);
-        }
-
-        .checkbox-list input[type="checkbox"]:checked::after {
-            content: '✓';
-            color: white;
-            font-size: 14px;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-
-        /* Buttons */
+        /* --- BUTTONS --- */
         .btn {
-            background: linear-gradient(135deg, var(--accent-color), #ffb300);
+            background: linear-gradient(135deg, var(--accent-color), #d97706);
             color: #000;
             border: none;
-            padding: 16px 32px;
+            padding: 18px;
             font-size: 1.2rem;
-            font-weight: bold;
+            font-weight: 800;
             border-radius: 50px;
             cursor: pointer;
             width: 100%;
-            margin-top: 15px;
-            transition: transform 0.1s, box-shadow 0.2s;
-            box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3);
+            margin-top: 10px;
+            box-shadow: 0 4px 15px var(--accent-glow);
+            transition: transform 0.1s;
             font-family: inherit;
         }
+        .btn:active { transform: scale(0.97); }
+        .btn-danger { background: linear-gradient(135deg, #ef4444, #b91c1c); color: white; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4); }
+        .btn-outline { background: transparent; border: 2px solid #3f3f46; color: var(--text-secondary); box-shadow: none; }
 
-        .btn:active { transform: scale(0.96); }
-        
-        .btn-danger { background: linear-gradient(135deg, var(--danger-color), #d32f2f); color: white; box-shadow: 0 4px 15px rgba(239, 83, 80, 0.3); }
-        .btn-secondary { background: #424242; color: white; box-shadow: none; }
-        
-        .invisible { opacity: 0; pointer-events: none; }
-
-        /* Card Animation */
-        .card-container {
-            perspective: 1000px;
+        /* --- 3D CARD ANIMATION --- */
+        .scene {
             width: 100%;
-            height: 260px;
+            height: 300px;
+            perspective: 1000px;
             margin: 20px 0;
             cursor: pointer;
         }
 
-        .card {
+        .card-object {
             width: 100%;
             height: 100%;
             position: relative;
-            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: transform 0.6s cubic-bezier(0.4, 0.0, 0.2, 1);
             transform-style: preserve-3d;
         }
 
-        .card.flipped { transform: rotateY(180deg); }
+        .card-object.flipped { transform: rotateY(180deg); }
 
         .card-face {
             position: absolute;
@@ -185,540 +131,454 @@
             height: 100%;
             backface-visibility: hidden;
             -webkit-backface-visibility: hidden;
+            border-radius: 20px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            border-radius: 20px;
-            padding: 20px;
-            box-sizing: border-box;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.1);
         }
 
-        .card-front {
-            background: linear-gradient(135deg, #333, #222);
+        .face-front {
+            background: linear-gradient(145deg, #27272a, #18181b);
             border: 2px solid var(--accent-color);
         }
 
-        .card-back {
-            background: var(--card-color);
+        .face-back {
+            background: #18181b;
             transform: rotateY(180deg);
-            border: 2px solid #555;
+            border: 2px solid white;
         }
 
-        .secret-word {
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: var(--accent-color);
-            margin: 15px 0;
-            word-wrap: break-word;
-        }
+        .role-text { font-size: 2.5rem; font-weight: 900; margin: 15px 0; text-align: center; }
+        .text-imposter { color: var(--danger-color); }
+        .text-citizen { color: var(--success-color); }
 
-        .imposter-text {
-            color: var(--danger-color);
-            font-size: 2.2rem;
-            font-weight: 900;
+        /* --- FILTER LIST --- */
+        .filter-container {
+            max-height: 120px;
+            overflow-y: auto;
+            background: #121212;
+            border-radius: 12px;
+            padding: 5px;
+            border: 1px solid #333;
         }
-
-        /* Timer */
-        .timer-display {
-            font-size: 5rem;
-            font-weight: 800;
-            margin: 30px 0;
-            direction: ltr;
-            font-variant-numeric: tabular-nums;
-            text-shadow: 0 0 20px rgba(255,255,255,0.1);
+        .filter-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #222;
         }
+        .filter-item:last-child { border-bottom: none; }
+        input[type="checkbox"] { accent-color: var(--accent-color); width: 20px; height: 20px; }
 
-        /* Voting System */
-        .voting-grid {
+        /* --- VOTING GRID --- */
+        .vote-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 12px;
-            margin-top: 20px;
+            margin-top: 15px;
         }
-
         .vote-btn {
-            background-color: #333;
-            border: 2px solid #444;
-            color: white;
+            background: #27272a;
+            border: 2px solid transparent;
             padding: 15px;
             border-radius: 12px;
+            color: white;
+            font-weight: bold;
             font-size: 1rem;
             cursor: pointer;
-            transition: all 0.2s;
             font-family: inherit;
+            transition: 0.2s;
         }
-
         .vote-btn:active { transform: scale(0.95); }
+        .vote-btn.caught { background: var(--success-color); color: black; border-color: var(--success-color); opacity: 0.5; pointer-events: none; }
 
-        .vote-btn.found {
-            background-color: rgba(102, 187, 106, 0.2);
-            border-color: var(--success-color);
-            color: var(--success-color);
-            pointer-events: none;
-        }
-
-        .vote-btn.disabled {
-            opacity: 0.5;
-            pointer-events: none;
-        }
-
-        /* Utility */
+        /* --- UTILS --- */
         .hidden { display: none !important; }
+        .invisible { opacity: 0; pointer-events: none; }
         .fade-in { animation: fadeIn 0.4s ease-out; }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        .status-msg {
-            margin-top: 10px;
-            padding: 10px;
-            border-radius: 8px;
-            font-weight: bold;
-        }
     </style>
 </head>
 <body>
 
-    <!-- SCREEN 1: SETUP -->
-    <div id="setup-screen" class="container fade-in">
-        <h1>🕵️ سەختەکار <span style="font-size:1rem; vertical-align: super; color: #fff; background: red; padding: 2px 6px; border-radius: 4px;">PRO</span></h1>
+    <div class="app-container">
         
-        <div class="control-group">
-            <label>👥 ژمارا یاریکەرا</label>
-            <select id="playerCount">
-                <option value="3">٣</option>
-                <option value="4" selected>٤</option>
-                <option value="5">٥</option>
-                <option value="6">٦</option>
-                <option value="7">٧</option>
-                <option value="8">٨</option>
-                <option value="9">٩</option>
-                <option value="10">١٠</option>
-                <option value="11">١١</option>
-                <option value="12">١٢</option>
-            </select>
-        </div>
+        <!-- SCREEN 1: SETUP -->
+        <div id="screen-setup" class="fade-in">
+            <h1>سەختەکار <span style="font-size:0.5em; vertical-align: super; background:var(--danger-color); color:white; padding:2px 6px; border-radius:4px;">PRO</span></h1>
+            <p>خۆشترین یاریا بادینی</p>
 
-        <div class="control-group">
-            <label>🎭 ژمارا فێلبازا (سەختەکار)</label>
-            <select id="imposterCount">
-                <option value="1">١</option>
-                <option value="2">٢</option>
-            </select>
-        </div>
-
-        <div class="control-group">
-            <label>⏳ ماوەیێ یاریێ (خولەک)</label>
-            <select id="gameDuration">
-                <option value="3" selected>٣ خولەک</option>
-                <option value="4">٤ خولەک</option>
-                <option value="5">٥ خولەک</option>
-                <option value="7">٧ خولەک</option>
-                <option value="10">١٠ خولەک</option>
-            </select>
-        </div>
-
-        <div class="control-group">
-            <label>📂 بابەتا هەلبژێرە</label>
-            <select id="categorySelect">
-                <option value="random">🎲 هەمی (Random)</option>
-                <!-- JS will fill this -->
-            </select>
-        </div>
-
-        <div class="control-group">
-            <label>چ بابەت د ناڤ Random دا نەهێن؟</label>
-            <p style="font-size: 0.85rem; color: #888; margin-bottom: 10px;">(تەنێ بابەتێن لێدراوی دێ د بژاردەیا "هەمی" دا دەربکەڤن)</p>
-            <div id="categoryFilterList" class="checkbox-list">
-                <!-- Checkboxes will be dynamically added here -->
-            </div>
-        </div>
-
-        <button class="btn" onclick="initGame()">دەستپێبکە</button>
-    </div>
-
-    <!-- SCREEN 2: PASS DEVICE -->
-    <div id="pass-screen" class="container hidden">
-        <h2>دورا یاریکەرێ</h2>
-        <div style="font-size: 5rem; font-weight: bold; color: var(--accent-color); margin: 20px 0;" id="player-number-display">١</div>
-        <p>موبایلێ بدە ڤی کەسی</p>
-        <div style="margin: 30px 0; font-size: 4rem;">📱🔄🧔</div>
-        <button class="btn" onclick="showRevealScreen()">ئەز ئامادەمە</button>
-    </div>
-
-    <!-- SCREEN 3: REVEAL ROLE -->
-    <div id="reveal-screen" class="container hidden">
-        <h2>رولێ خۆ ببینە</h2>
-        <p>ل سەر کارتێ بدە دا بزڤڕیت</p>
-        
-        <div class="card-container" onclick="flipCard()">
-            <div class="card" id="game-card">
-                <div class="card-face card-front">
-                    <span style="font-size: 4rem;">❓</span>
-                    <p style="font-size: 1.5rem;">لێدە</p>
+            <div class="glass-card">
+                <div class="control-group">
+                    <label>👥 ژمارا یاریکەرا</label>
+                    <select id="playerCount">
+                        <option value="3">٣</option>
+                        <option value="4" selected>٤</option>
+                        <option value="5">٥</option>
+                        <option value="6">٦</option>
+                        <option value="7">٧</option>
+                        <option value="8">٨</option>
+                        <option value="9">٩</option>
+                        <option value="10">١٠</option>
+                        <option value="11">١١</option>
+                        <option value="12">١٢</option>
+                    </select>
                 </div>
-                <div class="card-face card-back">
-                    <div class="role-title" id="role-label">رولێ تە</div>
-                    <div class="secret-word" id="secret-word-display">...</div>
-                    <p style="font-size: 1rem; margin-top:10px; opacity: 0.7;">(بلا کەسێ دی نەبینیت!)</p>
+
+                <div class="control-group">
+                    <label>🎭 ژمارا فێلبازا (سەختەکار)</label>
+                    <select id="imposterCount">
+                        <option value="1">١</option>
+                        <option value="2">٢</option>
+                        <option value="3">٣</option>
+                    </select>
+                </div>
+
+                <div class="control-group">
+                    <label>⏳ ماوەیێ یاریێ (دەقە)</label>
+                    <select id="duration">
+                        <option value="3">٣ خولەک</option>
+                        <option value="4">٤ خولەک</option>
+                        <option value="5" selected>٥ خولەک</option>
+                        <option value="7">٧ خولەک</option>
+                        <option value="10">١٠ خولەک</option>
+                    </select>
+                </div>
+
+                <div class="control-group">
+                    <label>📂 بابەتا هەلبژێرە</label>
+                    <select id="categorySelect">
+                        <option value="random">🎲 هەمی (Random)</option>
+                        <!-- Filled by JS -->
+                    </select>
+                </div>
+
+                <div class="control-group">
+                    <label>فلتەرکرنا بابەتا (د Random دا)</label>
+                    <div id="filterList" class="filter-container">
+                        <!-- Filled by JS -->
+                    </div>
                 </div>
             </div>
+
+            <button class="btn" onclick="startGame()">دەستپێبکە</button>
         </div>
 
-        <button class="btn btn-secondary invisible" id="next-player-btn" onclick="nextTurn()">ڤەشێرە & دەرباز بکە</button>
-    </div>
-
-    <!-- SCREEN 4: TIMER LOOP -->
-    <div id="game-screen" class="container hidden">
-        <h2>🗣️ دەستپێبکەن!</h2>
-        <p>بابەت: <span id="game-category-display" style="color:var(--accent-color); font-weight:bold; font-size:1.2rem;">-</span></p>
-        
-        <div class="timer-display" id="timer">0:00</div>
-        
-        <button class="btn btn-danger" onclick="startVoting()">داوی & دەنگدان</button>
-    </div>
-
-    <!-- SCREEN 5: VOTING -->
-    <div id="voting-screen" class="container hidden">
-        <h2>🗳️ دەنگدان</h2>
-        <p id="voting-instruction">فێلباز کییە؟ دەنگی بدەنە کەسەکی</p>
-        
-        <div id="status-message-area"></div>
-
-        <div id="voting-buttons" class="voting-grid">
-            <!-- Generated by JS -->
-        </div>
-    </div>
-
-    <!-- SCREEN 6: RESULTS -->
-    <div id="result-screen" class="container hidden">
-        <h1 id="win-status" style="font-size: 2.5rem; margin-bottom: 20px;"></h1>
-        
-        <div class="control-group">
-            <label>پەیڤا ڤەشارتی:</label>
-            <h2 style="color: var(--success-color); font-size: 2rem;" id="final-word">...</h2>
+        <!-- SCREEN 2: PASS DEVICE -->
+        <div id="screen-pass" class="hidden fade-in" style="text-align: center; margin: auto;">
+            <h2>دورا یاریکەرێ</h2>
+            <div style="font-size: 6rem; font-weight: 900; color: var(--accent-color); margin: 20px 0; text-shadow: 0 0 30px var(--accent-glow);" id="pass-num">١</div>
+            <p>موبایلێ بدە ڤی کەسی</p>
+            <div style="font-size: 5rem; margin: 30px 0;">📱 ➔ 🧔</div>
+            <button class="btn" onclick="revealRole()">ئەز ئامادەمە</button>
         </div>
 
-        <div class="control-group">
-            <label>😈 فێلباز:</label>
-            <div id="imposter-list" style="font-size: 1.5rem; font-weight:bold; color: var(--danger-color);"></div>
+        <!-- SCREEN 3: REVEAL ROLE -->
+        <div id="screen-reveal" class="hidden fade-in">
+            <h2 style="margin-top:20px">رولێ خۆ ببینە</h2>
+            <p>ل سەر کارتێ بدە دا بزڤڕیت</p>
+
+            <div class="scene" onclick="flipCard()">
+                <div class="card-object" id="role-card">
+                    <div class="card-face face-front">
+                        <div style="font-size: 4rem;">🔒</div>
+                        <h3 style="color:var(--accent-color); margin-top:10px;">لێبدە (Tap)</h3>
+                    </div>
+                    <div class="card-face face-back">
+                        <div style="font-size: 0.9rem; opacity: 0.7; letter-spacing: 1px;">رولێ تە</div>
+                        <div id="role-text" class="role-text">...</div>
+                        <div id="role-hint" style="font-size: 0.9rem; color: #ccc; padding: 0 10px; text-align: center;">...</div>
+                    </div>
+                </div>
+            </div>
+
+            <button id="btn-next" class="btn btn-outline invisible" onclick="nextPlayer()">ڤەشێرە & دەرباز بکە</button>
         </div>
 
-        <button class="btn" onclick="location.reload()">یاریەکا نوی</button>
+        <!-- SCREEN 4: GAME TIMER -->
+        <div id="screen-game" class="hidden fade-in" style="text-align: center; margin: auto;">
+            <h2>🗣️ دەستپێبکەن!</h2>
+            
+            <div class="glass-card" style="display:inline-block; padding: 10px 30px; margin-bottom: 30px;">
+                <p style="margin:0; font-size:0.8rem;">بابەت</p>
+                <h2 id="game-category-display" style="color:var(--accent-color); margin:0; font-size:1.8rem;">-</h2>
+            </div>
+
+            <div style="font-size: 5rem; font-weight: bold; margin-bottom: 40px; font-variant-numeric: tabular-nums;" id="timer-display">0:00</div>
+
+            <button class="btn btn-danger" onclick="startVoting()">داوی & دەنگدان</button>
+        </div>
+
+        <!-- SCREEN 5: VOTING -->
+        <div id="screen-voting" class="hidden fade-in" style="text-align: center;">
+            <h2>🗳️ دەنگدان</h2>
+            <p>کێ فێلبازە؟ ل سەر ناڤێ وی بدە</p>
+            <div id="vote-status" style="margin: 10px 0; font-weight: bold; min-height: 24px;"></div>
+            <div class="vote-grid" id="vote-grid"></div>
+        </div>
+
+        <!-- SCREEN 6: RESULTS -->
+        <div id="screen-results" class="hidden fade-in" style="text-align: center;">
+            <div style="font-size: 4rem; margin-bottom: 10px;">🏆</div>
+            <h1 id="winner-title">...</h1>
+            
+            <div class="glass-card" style="margin-top:20px;">
+                <p style="margin-bottom: 5px;">پەیڤا ڤەشارتی:</p>
+                <h2 id="result-word" style="color:var(--success-color); margin:0;">...</h2>
+            </div>
+
+            <div class="glass-card" style="text-align: right; max-height: 250px; overflow-y: auto;">
+                <p style="font-weight:bold; margin-bottom:10px; color:white;">لیستا رۆڵان:</p>
+                <div id="roles-list"></div>
+            </div>
+
+            <button class="btn" onclick="location.reload()">یاریەکا نوی</button>
+        </div>
+
     </div>
 
     <script>
-        // --- HUGE DATABASE ---
+        // --- DATABASE (BADINI CONTENT) ---
         const database = [
-            {
-                name: "باژێر (Cities)",
-                words: ["دهوک", "زاخو", "هەولێر", "سلێمانی", "کەرکوک", "ئاکرێ", "ئامێدی", "ئیستەنبول", "بەغدا", "پاریس", "لەندەن", "دوبەی", "بەرلین", "موسل", "شێلادزێ"]
-            },
-            {
-                name: "خوارن (Food)",
-                words: ["کوتلک", "بریانی", "دۆلمە", "کەباب", "سەر و پێ", "کوبە", "شۆربا نیسکا", "پیتزا", "ساوار", "گۆشتێ مریشکا", "مەقلووبە", "هەمبەرگەر", "یاپراخ", "مەسکوف"]
-            },
-            {
-                name: "سترانبێژ (Singers)",
-                words: ["زەکەریا", "عبدالقەهار زاخوی", "بلند ئیبراهیم", "شڤان پەروەر", "خێرۆ عەباس", "دەشتی کالێ", "چۆپی فەتاح", "عەبدولواحید زاخوی", "جەستن بیبەر", "شاکیرا", "ئەدێل", "ئەحمەد خەلیل"]
-            },
-            {
-                name: "یانێن تەپا پێ (Football Teams)",
-                words: ["بەرشەلۆنە", "ریال مەدرید", "مانچێستەر یونایتد", "لیڤەرپول", "بایرن میونخ", "پاریس سانجێرمان", "یۆڤێنتۆس", "میلان", "دهوک", "ئەرسیناڵ", "مانچێستەر سیتی", "شورتە"]
-            },
-            {
-                name: "یاریکەرێن جیهانی (Players)",
-                words: ["مێسی", "رۆناڵدۆ", "نەیمار", "ئەمباپێ", "هالاند", "بێلینگهام", "ڤینیسیۆس", "سەڵاح", "لیڤاندۆڤیسکی", "مۆدریچ", "زێدان", "مارادۆنا"]
-            },
-            {
-                name: "جۆرێن ترۆمبێلا (Cars)",
-                words: ["تویۆتا", "مێرسیدس", "بی ئێم دەبلیو (BMW)", "هۆندای", "کیا", "لاند کروزەر", "رەنج رۆڤەر", "فێراری", "نیسان", "جیپ", "فۆرد", "ئۆپڵ"]
-            },
-            {
-                name: "گیانەوەر (Animals)",
-                words: ["شێر", "پلنگ", "مار", "کەر", "هەسپ", "پیسیک", "سە (کۆچک)", "گورگ", "کەو", "میهـ", "فیل", "مریشک", "كێڤژالە", "ماسی"]
-            },
-            {
-                name: "جهـ (Places)",
-                words: ["قوتابخانە", "نەخۆشخانە", "مزگەفت", "زانکۆ", "فڕۆکەخانە", "ئوتێل", "پارک", "فەرمانگەهـ", "بازاڕ", "ماڵا خەزووری", "سینەما", "کافێ", "باشترین کافێ"]
-            },
-            {
-                name: "تشتێن مالێ (Objects)",
-                words: ["تەلەفزیۆن", "سۆبە", "ساردکەر (سەلاجە)", "فراق شو", "موبایل", "تەختێ خەوێ", "قەنەفە", "مافۆر (خالیچە)", "دەرگەهـ", "پەنجەرە", "ئاوێنە", "جل شۆ"]
-            }
+            { name: "باژێر (Cities)", words: ["دهوک", "زاخو", "هەولێر", "سلێمانی", "کەرکوک", "ئاکرێ", "ئامێدی", "شێلادزێ", "بەغدا", "موسل", "ئیستەنبول", "پاریس", "دوبەی", "لەندەن", "بەرلین"] },
+            { name: "وەلات (Countries)", words: ["کوردستان", "عیراق", "تورکیا", "ئیران", "سوریا", "ئەمەریکا", "ئەلمانیا", "فەرەنسا", "بەریتانیا", "بەرازیل", "ئەرجەنتین", "یابان", "چین", "روسیا"] },
+            { name: "خوارن (Food)", words: ["کوتلک", "بریانی", "دۆلمە", "کەباب", "سەر و پێ (پاچە)", "کوبە", "شۆربا نیسکا", "پیتزا", "مەقلوبە", "هەمبەرگەر", "شفتە", "ماسی", "ساوار", "شاورمە", "فەلافل", "گۆشتێ مریشکا", "برنج و فاسولیا"] },
+            { name: "سترانبێژ (Singers)", words: ["زەکەریا عەبدوللا", "عەبدولقەهار زاخوی", "بلند ئیبراهیم", "شڤان پەروەر", "خێرۆ عەباس", "ئەحمەد خەلیل", "هەڤال ئیبراهیم", "حەسەن شەریف", "ئەیاز یوسف", "ئەردەوان زاخوی", "تەحسین تەها", "محەمەد شێخۆ", "چۆپی فەتاح", "حەمە جەزا", "ناسر رەزازی"] },
+            { name: "کەسایەتی (Famous)", words: ["مێسی", "رۆناڵدۆ", "نەیمار", "ئیلۆن مەسک", "مارک زوکەربێرگ", "بیل گەیتس", "ستیڤ جۆبس", "ئەلبێرت ئەینشتاین", "تۆم کروز", "لیۆناردۆ دیکاپریۆ", "محەمەد عەلی کلای", "شاکیرە", "جەستن بیبەر"] },
+            { name: "تەپا پێ (Football)", words: ["بەرشەلۆنە", "ریال مەدرید", "مانچێستەر یونایتد", "مانچێستەر سیتی", "لیڤەرپول", "ئەرسیناڵ", "چێڵسی", "بایرن میونخ", "پاریس سانجێرمان", "یۆڤێنتۆس", "میلان", "ئینتەر", "یانا دهوک", "یانا هەولێر", "هەڵبژاردێ بەرازیل"] },
+            { name: "ترۆمبێل (Cars)", words: ["تویۆتا", "مێرسیدس", "BMW", "هۆندای", "کیا", "لاند کروزەر", "رەنج رۆڤەر", "جیپ", "فۆرد", "شۆفرلێت", "نیسان", "فێراری", "لامبۆرگینی", "تێسلا", "دۆج", "ئۆپڵ"] },
+            { name: "گیانەوەر (Animals)", words: ["شێر", "پلنگ", "مار", "کەر", "هەسپ", "پیسیک (کتک)", "سە (کۆچک)", "گورگ", "کەو", "میهـ (پەز)", "فیل", "زەرافە", "مەیمون", "هیرچ", "ریڤی", "کەرگۆشک", "گامێش", "ئەیلۆ"] },
+            { name: "کار (Jobs)", words: ["مامۆستا", "نۆژدار (دکتۆر)", "ئەندازیار", "پۆلیس", "پێشمەرگە", "بازرگان", "ئاژۆتڤان (سایەق)", "نانپێژ", "سەرتاش", "وێنەگر", "پارێزەر", "دادوەر", "رۆژنامەڤان", "جوتکار", "کارکەر", "فیتەر", "تەباخ"] },
+            { name: "فێکی (Fruits)", words: ["سێڤ", "مۆز", "پرتەقال", "هینار", "تری", "زەبەش (شوتی)", "گندۆر", "هیرمی", "خۆخ", "قەیسی", "توو", "تووفرەنگی", "کیوی", "ئەناناس", "لێمۆن", "خورمە", "هەژیر"] },
+            { name: "جهـ (Places)", words: ["قوتابخانە", "نەخۆشخانە", "مزگەفت", "زانکۆ", "فڕۆکەخانە", "ئوتێل", "پارک", "کافێ", "بازاڕ", "مۆڵ", "سینەما", "یاریگەهـ (مەلعەب)", "ماڵا خەزووری", "چایخانە", "رێستۆرانت", "دەریا", "چیا", "دارستان"] },
+            { name: "تشتێن مالێ (Objects)", words: ["تەلەفزیۆن", "سۆبە", "سەلاجە", "موبایل", "تەختێ خەوێ", "قەنەفە", "ئاوێنە", "کۆمپیوتەر", "لاپتۆپ", "ئایپاد", "پێنڤیس", "پرتوک", "دەمژمێر", "گلۆپ", "پانکە", "مێز", "کورسی", "دەرگەهـ", "پەنجەرە", "خالیچە"] }
         ];
 
         // --- STATE ---
         let state = {
-            players: [], 
-            currentPlayerIndex: 0,
+            players: [],
+            turn: 0,
             secretWord: "",
             category: "",
-            timerInterval: null,
+            timer: null,
             totalImposters: 0,
-            foundImpostersCount: 0
+            foundImposters: 0
         };
 
-        const arabicNumerals = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
-        function toArabicNum(n) {
-            return n.toString().replace(/\d/g, d => arabicNumerals[d]);
-        }
+        const toArabicNum = n => n.toString().replace(/\d/g, d => "٠١٢٣٤٥٦٧٨٩"[d]);
 
-        // --- INITIALIZATION ---
-        window.onload = function() {
+        // --- INIT ---
+        window.onload = () => {
             const catSelect = document.getElementById('categorySelect');
-            const filterList = document.getElementById('categoryFilterList');
+            const filterList = document.getElementById('filterList');
 
-            database.forEach((cat, index) => {
-                // 1. Fill the Select dropdown
-                const option = document.createElement('option');
-                option.value = index;
-                option.innerText = cat.name;
-                catSelect.appendChild(option);
-
-                // 2. Fill the Filter Checkbox list
-                const div = document.createElement('div');
-                div.innerHTML = `
-                    <label for="cat-filter-${index}">${cat.name}</label>
-                    <input type="checkbox" id="cat-filter-${index}" value="${index}" checked>
-                `;
+            database.forEach((cat, i) => {
+                // Dropdown
+                let opt = document.createElement('option');
+                opt.value = i; opt.innerText = cat.name;
+                catSelect.appendChild(opt);
+                
+                // Filter
+                let div = document.createElement('div');
+                div.className = 'filter-item';
+                div.innerHTML = `<label for="c-${i}" style="margin:0; font-weight:normal; color:white; cursor:pointer;">${cat.name}</label><input type="checkbox" id="c-${i}" value="${i}" checked>`;
                 filterList.appendChild(div);
             });
         };
 
-        function getFilteredCategories() {
-            const catVal = document.getElementById('categorySelect').value;
-            
-            if (catVal !== 'random') {
-                // If a specific category is selected, use only that one.
-                return [database[parseInt(catVal)]];
-            }
-
-            // If Random is selected, filter based on checkboxes
-            const checkedBoxes = Array.from(document.querySelectorAll('#categoryFilterList input[type="checkbox"]:checked'));
-            
-            if (checkedBoxes.length === 0) {
-                // If nothing is checked, and random is selected, this is an error case.
-                return []; 
-            }
-
-            const filteredCategories = checkedBoxes.map(checkbox => {
-                return database[parseInt(checkbox.value)];
-            });
-
-            return filteredCategories;
-        }
-
-
-        function initGame() {
+        // --- GAME START ---
+        function startGame() {
             const pCount = parseInt(document.getElementById('playerCount').value);
             const iCount = parseInt(document.getElementById('imposterCount').value);
-            const duration = parseInt(document.getElementById('gameDuration').value);
+            const catVal = document.getElementById('categorySelect').value;
 
-            if (iCount >= pCount - 1) {
-                console.error("Number of imposters is too high.");
-                alert("خەلەتی: ژمارا فێلبازا گەلەکە!");
-                return;
+            if (iCount >= pCount) { alert("ژمارا فێلبازا گەلەکە!"); return; }
+
+            // Category Logic
+            let catObj;
+            if (catVal === 'random') {
+                const checks = Array.from(document.querySelectorAll('#filterList input:checked'));
+                if(checks.length === 0) { alert("تکایە بابەتەکی هەلبژێرە!"); return; }
+                const randomIdx = checks[Math.floor(Math.random() * checks.length)].value;
+                catObj = database[randomIdx];
+            } else {
+                catObj = database[catVal];
             }
 
-            // 1. Get Filtered Categories
-            const selectableCategories = getFilteredCategories();
-
-            if (selectableCategories.length === 0) {
-                alert("پێدڤیە لێدانەکێ (Check) ل سەر لایەنی کێم ئێک بابەتی بکەی، یان بابەتەکێ دی هەلبژێری.");
-                return;
-            }
-
-            // 2. Select Category & Word
-            const selectedCategory = selectableCategories[Math.floor(Math.random() * selectableCategories.length)];
-            
-            state.category = selectedCategory.name;
-            state.secretWord = selectedCategory.words[Math.floor(Math.random() * selectedCategory.words.length)];
+            state.category = catObj.name;
+            state.secretWord = catObj.words[Math.floor(Math.random() * catObj.words.length)];
             state.totalImposters = iCount;
-            state.foundImpostersCount = 0;
-            state.gameDuration = duration;
+            state.foundImposters = 0;
+            state.turn = 0;
 
-            // 3. Build Roles
+            // Roles Logic
             let roles = Array(pCount).fill("وەلاتی");
             for(let i=0; i<iCount; i++) roles[i] = "سەختەکار";
             roles.sort(() => Math.random() - 0.5);
 
-            state.players = roles.map((role, index) => ({
-                id: index + 1,
-                role: role,
-                isFound: false
-            }));
-            state.currentPlayerIndex = 0;
+            state.players = roles.map((r, i) => ({ id: i+1, role: r, isFound: false }));
 
-            switchScreen('setup-screen', 'pass-screen');
+            showScreen('screen-pass');
             updatePassScreen();
         }
 
-        // --- NAVIGATION ---
+        // --- PASS & REVEAL ---
         function updatePassScreen() {
-            document.getElementById('player-number-display').innerText = toArabicNum(state.players[state.currentPlayerIndex].id);
+            document.getElementById('pass-num').innerText = toArabicNum(state.players[state.turn].id);
         }
 
-        function showRevealScreen() {
-            const card = document.getElementById('game-card');
-            card.classList.remove('flipped');
-            document.getElementById('next-player-btn').classList.add('invisible');
+        function revealRole() {
+            showScreen('screen-reveal');
+            document.getElementById('role-card').classList.remove('flipped');
+            document.getElementById('btn-next').classList.add('invisible');
 
-            const currentPlayer = state.players[state.currentPlayerIndex];
-            const wordDisplay = document.getElementById('secret-word-display');
-            const roleLabel = document.getElementById('role-label');
+            const p = state.players[state.turn];
+            const txt = document.getElementById('role-text');
+            const hint = document.getElementById('role-hint');
 
-            if (currentPlayer.role === "سەختەکار") {
-                roleLabel.innerText = "رولێ تە:";
-                wordDisplay.innerText = "فێلباز (سەختەکار)";
-                wordDisplay.className = "secret-word imposter-text";
+            if (p.role === "سەختەکار") {
+                txt.innerText = "فێلباز\n(سەختەکار)";
+                txt.className = "role-text text-imposter";
+                hint.innerText = "هەول بدە بزانی بابەت چییە و خۆ نەدە دەست!";
             } else {
-                roleLabel.innerText = "پەیڤا تە:";
-                wordDisplay.innerText = state.secretWord;
-                wordDisplay.className = "secret-word";
-                wordDisplay.style.color = "var(--accent-color)";
+                txt.innerText = state.secretWord;
+                txt.className = "role-text text-citizen";
+                hint.innerText = `بابەت: ${state.category.split('(')[0]}`;
             }
-            switchScreen('pass-screen', 'reveal-screen');
         }
 
         function flipCard() {
-            document.getElementById('game-card').classList.add('flipped');
-            const nextBtn = document.getElementById('next-player-btn');
-            nextBtn.classList.remove('invisible');
-            nextBtn.classList.add('fade-in');
+            document.getElementById('role-card').classList.add('flipped');
+            document.getElementById('btn-next').classList.remove('invisible');
         }
 
-        function nextTurn() {
-            state.currentPlayerIndex++;
-            if (state.currentPlayerIndex >= state.players.length) {
-                startGameTimer();
-            } else {
-                switchScreen('reveal-screen', 'pass-screen');
+        function nextPlayer() {
+            state.turn++;
+            if (state.turn < state.players.length) {
+                showScreen('screen-pass');
                 updatePassScreen();
+            } else {
+                runTimer();
             }
         }
 
         // --- TIMER ---
-        function startGameTimer() {
-            switchScreen('reveal-screen', 'game-screen');
+        function runTimer() {
+            showScreen('screen-game');
             document.getElementById('game-category-display').innerText = state.category.split('(')[0];
-            
-            let duration = state.gameDuration * 60;
-            const timerDisplay = document.getElementById('timer');
-            
-            // Immediate render
-            let m = Math.floor(duration / 60);
-            let s = duration % 60;
-            timerDisplay.innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
 
-            state.timerInterval = setInterval(() => {
-                duration--;
-                let m = Math.floor(duration / 60);
-                let s = duration % 60;
-                timerDisplay.innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
+            let min = parseInt(document.getElementById('duration').value);
+            let sec = 0;
+            const display = document.getElementById('timer-display');
+            display.innerText = `${min}:00`;
 
-                if (duration <= 0) {
-                    clearInterval(state.timerInterval);
-                    timerDisplay.style.color = "red";
-                    timerDisplay.innerText = "0:00";
-                    startVoting();
+            if (state.timer) clearInterval(state.timer);
+            state.timer = setInterval(() => {
+                if (sec === 0) {
+                    if (min === 0) {
+                        clearInterval(state.timer);
+                        display.style.color = "var(--danger-color)";
+                        startVoting();
+                        return;
+                    }
+                    min--; sec = 59;
+                } else {
+                    sec--;
                 }
+                display.innerText = `${min}:${sec < 10 ? '0'+sec : sec}`;
             }, 1000);
         }
 
-        // --- VOTING LOGIC (NEW & IMPROVED) ---
+        // --- VOTING ---
         function startVoting() {
-            clearInterval(state.timerInterval);
-            switchScreen('game-screen', 'voting-screen');
-            document.getElementById('status-message-area').innerHTML = ''; // Clear previous messages
-            renderVotingButtons();
-        }
+            clearInterval(state.timer);
+            showScreen('screen-voting');
+            
+            const grid = document.getElementById('vote-grid');
+            grid.innerHTML = '';
+            document.getElementById('vote-status').innerText = "";
 
-        function renderVotingButtons() {
-            const container = document.getElementById('voting-buttons');
-            container.innerHTML = '';
-
-            state.players.forEach(player => {
-                const btn = document.createElement('button');
+            state.players.forEach(p => {
+                let btn = document.createElement('button');
                 btn.className = 'vote-btn';
-                btn.innerText = `یاریکەر ${toArabicNum(player.id)}`;
+                btn.innerText = `یاریکەر ${toArabicNum(p.id)}`;
                 
-                if (player.isFound) {
-                    btn.classList.add('found');
+                if (p.isFound) {
+                    btn.classList.add('caught');
                     btn.innerText += " (گیرای)";
                 } else {
-                    btn.onclick = () => checkVote(player.id, btn);
+                    btn.onclick = () => handleVote(p, btn);
                 }
-                
-                container.appendChild(btn);
+                grid.appendChild(btn);
             });
         }
 
-        function checkVote(selectedPlayerId, btnElement) {
-            const selectedPlayer = state.players.find(p => p.id === selectedPlayerId);
-            const msgArea = document.getElementById('status-message-area');
+        function handleVote(player, btn) {
+            const status = document.getElementById('vote-status');
 
-            // 1. If user selects a CITIZEN (Wrong Guess) -> GAME OVER immediately
-            if (selectedPlayer.role === "وەلاتی") {
-                endGame(false); // Citizens Lose
-                return;
-            }
+            if (player.role === "وەلاتی") {
+                endGame(false); // Imposters Win immediately
+            } else {
+                // Found Imposter
+                player.isFound = true;
+                state.foundImposters++;
+                btn.classList.add('caught');
+                btn.innerText += " (گیرای)";
 
-            // 2. If user selects an IMPOSTER (Correct Guess)
-            if (selectedPlayer.role === "سەختەکار") {
-                selectedPlayer.isFound = true; // Mark as found
-                state.foundImpostersCount++;
-
-                // Update UI
-                btnElement.classList.add('found');
-                btnElement.innerText += " (گیرای)";
-                
-                // Check if ALL imposters are found
-                if (state.foundImpostersCount === state.totalImposters) {
+                if (state.foundImposters >= state.totalImposters) {
                     endGame(true); // Citizens Win
                 } else {
-                    // Game continues, must find the other one
-                    msgArea.innerHTML = `<div class="status-msg" style="background:rgba(102, 187, 106, 0.2); color:#66bb6a;">✅ ئافەرم! تە ئێک گرت. یێ دی ژی ببینە!</div>`;
-                    renderVotingButtons(); // Re-render to ensure correct state and disable the button
+                    status.innerHTML = `<span style="color:var(--success-color)">✅ ئافەرم! تە ئێک گرت. یێ دی ژی ببینە.</span>`;
                 }
             }
         }
 
-        function endGame(citizensWon) {
-            switchScreen('voting-screen', 'result-screen');
-            const winStatus = document.getElementById('win-status');
-
-            if (citizensWon) {
-                winStatus.innerText = "🎉 هەوە برد! (هەمی فێلباز گیران)";
-                winStatus.style.color = "var(--success-color)";
+        // --- RESULTS ---
+        function endGame(citizensWin) {
+            showScreen('screen-results');
+            const title = document.getElementById('winner-title');
+            
+            if (citizensWin) {
+                title.innerText = "وەلاتیان برد! 🎉";
+                title.style.color = "var(--success-color)";
             } else {
-                winStatus.innerText = "❌ هەوە دۆڕاند (فێلباز سەرکەفت)";
-                winStatus.style.color = "var(--danger-color)";
+                title.innerText = "فێلبازان برد! 😈";
+                title.style.color = "var(--danger-color)";
             }
 
-            document.getElementById('final-word').innerText = state.secretWord;
-            
-            // Display all Imposters, whether found or not
-            const imposterIds = state.players
-                .filter(p => p.role === "سەختەکار")
-                .map(p => `یاریکەر ${toArabicNum(p.id)}`)
-                .join("، ");
-            
-            document.getElementById('imposter-list').innerText = imposterIds;
+            document.getElementById('result-word').innerText = state.secretWord;
+
+            const list = document.getElementById('roles-list');
+            list.innerHTML = '';
+            state.players.forEach(p => {
+                let div = document.createElement('div');
+                div.style.padding = "10px 0";
+                div.style.borderBottom = "1px solid rgba(255,255,255,0.1)";
+                div.style.display = "flex";
+                div.style.justifyContent = "space-between";
+                
+                let color = p.role === "سەختەکار" ? "var(--danger-color)" : "var(--success-color)";
+                let name = p.role === "سەختەکار" ? "فێلباز" : "وەلاتی";
+
+                div.innerHTML = `
+                    <span>یاریکەر ${toArabicNum(p.id)}</span> 
+                    <span style="color:${color}; font-weight:bold;">${name}</span>
+                `;
+                list.appendChild(div);
+            });
         }
 
-        function switchScreen(fromId, toId) {
-            document.getElementById(fromId).classList.add('hidden');
-            const toEl = document.getElementById(toId);
-            toEl.classList.remove('hidden');
-            toEl.classList.add('fade-in');
-            setTimeout(() => toEl.classList.remove('fade-in'), 500);
+        function showScreen(id) {
+            document.querySelectorAll('.app-container > div').forEach(el => el.classList.add('hidden'));
+            document.getElementById(id).classList.remove('hidden');
         }
     </script>
 </body>
 </html>
+
 
